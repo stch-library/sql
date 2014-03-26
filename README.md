@@ -44,6 +44,24 @@ Queries are composed of threaded fn calls, producing a map, which when formatted
 ; ["SELECT * FROM foo WHERE firstName = ?" "Billy"]
 ```
 
+If you are using [clj.jdbc](https://github.com/niwibe/clj.jdbc), you can extend the ISQLStatement protocol, so that you don't have to manually call sql/format.
+
+```clojure
+(require '[jdbc.types :as types])
+
+(extend-protocol types/ISQLStatement
+  clojure.lang.APersistentMap
+  (normalize [this conn options]
+    (types/normalize (sql/format this) conn options)))
+
+(let [id 1234
+      sql (-> (select :*)
+              (from :users)
+              (where `(= userID ~id)))
+      result (query conn sql {:identifiers identity})]
+  (-> result first))
+```
+
 SELECT
 
 ```clojure
