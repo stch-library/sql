@@ -9,7 +9,7 @@ Based on code from [Honey SQL](https://github.com/jkk/honeysql) and ideas from [
 Add the following to your project dependencies:
 
 ```clojure
-[stch-library/sql "0.1.0"]
+[stch-library/sql "0.1.1"]
 ```
 
 ## API Documentation

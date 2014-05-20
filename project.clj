@@ -1,4 +1,4 @@
-(defproject stch-library/sql "0.1.0"
+(defproject stch-library/sql "0.1.1"
   :description
   "A DSL in Clojure for SQL query, DML, and DDL."
   :url "https://github.com/stch-library/sql"
