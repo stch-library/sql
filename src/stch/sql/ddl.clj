@@ -189,6 +189,10 @@
 (deftypefn decimal "DECIMAL")
 (deftypefn float' "FLOAT")
 (deftypefn double' "DOUBLE")
+; PostgreSQL Serial
+(deftypefn small-serial "SMALLSERIAL")
+(deftypefn serial "SERIAL")
+(deftypefn big-serial "BIGSERIAL")
 ; String
 (deftypefn chr "CHAR")
 (def char' chr)
@@ -631,14 +635,3 @@
                 (or (column? x) (index? x))
                 (list x))]
     (update-in m [:columns+keys] into y)))
-
-
-
-
-
-
-
-
-
-
-

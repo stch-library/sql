@@ -53,6 +53,22 @@
                  (create
                    (-> (table :users)
                        (double' :points))))))
+    (context "serial"
+      (it "small-serial"
+        (should= "CREATE TABLE users (id SMALLSERIAL)"
+                 (create
+                   (-> (table :users)
+                       (small-serial :id)))))
+      (it "serial"
+        (should= "CREATE TABLE users (id SERIAL)"
+                 (create
+                   (-> (table :users)
+                       (serial :id)))))
+      (it "big-serial"
+        (should= "CREATE TABLE users (id BIGSERIAL)"
+                 (create
+                   (-> (table :users)
+                       (big-serial :id))))))
     (context "string"
       (it "chr"
         (should= "CREATE TABLE users (countryCode CHAR(2))"
@@ -493,19 +509,3 @@
       (should= "RENAME DATABASE prod TO production"
                (rename-db (db :prod)
                           (db :production))))))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
