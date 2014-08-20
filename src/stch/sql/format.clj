@@ -424,7 +424,3 @@
 
 (defmethod format-clause :using [[_ tables] _]
   (str "USING " (comma-join (map to-sql tables))))
-
-
-
-

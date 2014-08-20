@@ -522,7 +522,7 @@ TEMPORARY TABLE
       (drop-index :uname)
       (drop-primary-key)
       (drop-foreign-key :fk1)))
-; "CREATE TABLE users (userID INT UNSIGNED NOT NULL, orgID INT, groups SET('user', 'admin') DEFAULT 'user', status ENUM('active', 'inactive'), ranking DECIMAL(3, 1) DEFAULT 0, username VARCHAR(50), countryCode CHAR(2) DEFAULT 'US', PRIMARY KEY(userID), INDEX(userID, orgID), UNIQUE(username), FOREIGN KEY(orgID) REFERENCES orgs(orgID) ON DELETE CASCADE) ENGINE=InnoDB, COLLATE=utf8_general_ci"
+; "ALTER TABLE users ADD COLUMN email VARCHAR(50) AFTER userID, ADD COLUMN firstName VARCHAR(25) FIRST, ADD INDEX(firstName, lastName), ADD INDEX(username, ranking), ADD FOREIGN KEY(orgID) REFERENCES orgs(orgID) ON DELETE CASCADE, CHANGE username username VARCHAR(100), ALTER COLUMN ranking DROP DEFAULT, ALTER COLUMN ranking SET DEFAULT 1, DROP COLUMN countryCode, DROP INDEX uname, DROP PRIMARY KEY, DROP FOREIGN KEY fk1"
 ```
 
 ADD
@@ -577,15 +577,3 @@ DROP COLUMN
 ## Unit-tests
 
 Run "lein spec"
-
-
-
-
-
-
-
-
-
-
-
-
