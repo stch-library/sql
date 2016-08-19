@@ -1,6 +1,7 @@
 (ns stch.sql
   "SQL DSL for query and data manipulation language
   (DML). Supports a majority of MySQL's statements."
+  (:refer-clojure :exclude [update])
   (:require [stch.sql.types :as types]))
 
 (defmulti build-clause (fn [name & args]
