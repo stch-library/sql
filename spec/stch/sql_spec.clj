@@ -1,6 +1,7 @@
 (ns stch.sql-spec
   (:require [stch.sql.format :as sql])
-  (:use stch.sql speclj.core))
+  (:use stch.sql speclj.core )
+  (:refer-clojure :exclude [update]))
 
 (describe "select"
   (context "select"
@@ -355,7 +356,7 @@
 
 (describe "insert"
   (it "vector of maps"
-    (should= ["INSERT INTO users (age, name) VALUES (35, ?), (37, ?)" "Billy" "Joey"]
+    (should= ["INSERT INTO users (name, age) VALUES (?, 35), (?, 37)" "Billy" "Joey"]
              (-> (insert-into :users)
                  (values [{:name "Billy" :age 35}
                           {:name "Joey" :age 37}])
@@ -397,7 +398,7 @@
 
 (describe "update"
   (it "setv"
-    (should= ["UPDATE users SET age = 35, name = ? WHERE id = 234" "Billy"]
+    (should= ["UPDATE users SET name = ?, age = 35 WHERE id = 234" "Billy"]
              (-> (update :users)
                  (setv {:name "Billy", :age 35})
                  (where '(= id 234))
@@ -432,7 +433,7 @@
 
 (describe "replace"
   (it "vector of maps"
-    (should= ["REPLACE INTO users (age, name) VALUES (35, ?), (37, ?)" "Billy" "Joey"]
+    (should= ["REPLACE INTO users (name, age) VALUES (?, 35), (?, 37)" "Billy" "Joey"]
              (-> (replace-into :users)
                  (values [{:name "Billy" :age 35}
                           {:name "Joey" :age 37}])
