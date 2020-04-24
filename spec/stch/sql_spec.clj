@@ -1,6 +1,7 @@
 (ns stch.sql-spec
   (:require [stch.sql.format :as sql])
-  (:use stch.sql speclj.core))
+  (:use stch.sql speclj.core )
+  (:refer-clojure :exclude [update]))
 
 (describe "select"
   (context "select"
