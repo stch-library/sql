@@ -4,7 +4,7 @@
   :url "https://github.com/stch-library/sql"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.5.1"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
                  [stch-library/schema "0.3.3"]]
   :profiles {:dev {:dependencies [[speclj "3.0.2"]]}}
   :plugins [[speclj "3.0.2"]
