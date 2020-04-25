@@ -1,5 +1,7 @@
 # stch.sql
 
+[![Clojars Project](https://img.shields.io/clojars/v/stch-library/sql.svg)](https://clojars.org/stch-library/sql)
+
 A DSL in Clojure for SQL query, DML, and DDL. Supports a majority of MySQL's statements.
 
 Based on code from [Honey SQL](https://github.com/jkk/honeysql) and ideas from [Lobos](http://budu.github.io/lobos/) and [SQLingvo](https://github.com/r0man/sqlingvo).  Many thanks to the authors of those libraries.
