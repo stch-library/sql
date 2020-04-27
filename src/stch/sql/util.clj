@@ -1,6 +1,7 @@
 (ns stch.sql.util
   "Shared utility fns for query, DML, and DDL."
-  (:require [clojure.string :as string]))
+  (:require
+   [clojure.string :as string]))
 
 (defn pad [s]
   (str " " s " "))

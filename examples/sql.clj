@@ -44,7 +44,7 @@
 
 (-> (insert-into :foo)
     (columns :name :age)
-    (values [["Billy" 35]["Joey" 37]])
+    (values [["Billy" 35] ["Joey" 37]])
     sql/format)
 
 (-> (insert-into :foo)
@@ -296,7 +296,6 @@
     (sql/format :params {:baz "BAZ"}
                 :quoting :mysql))
 
-
 ; DDL
 (use 'stch.sql.ddl)
 
@@ -327,79 +326,76 @@
   (append org-id))
 
 (create
- (-> (table :users)
-     (set' :groups ["user" "admin"] (default "user"))
-     (enum :status ["active" "inactive"])
-     (decimal :ranking '(3 1) (default 0))
-     (chr :countryCode [2] (default "US"))))
+  (-> (table :users)
+      (set' :groups ["user" "admin"] (default "user"))
+      (enum :status ["active" "inactive"])
+      (decimal :ranking '(3 1) (default 0))
+      (chr :countryCode [2] (default "US"))))
 
 (create
- (-> (table :users)
-     (integer :userID :unsigned :not-null :primary-key)
-     (varchar :username [50])
-     (constraint :uname (unique :username))
-     (constraint :fk1 (foreign-key :userID
-                                   '(users userID)
-                                   :on-delete-cascade))))
+  (-> (table :users)
+      (integer :userID :unsigned :not-null :primary-key)
+      (varchar :username [50])
+      (constraint :uname (unique :username))
+      (constraint :fk1 (foreign-key :userID
+                                    '(users userID)
+                                    :on-delete-cascade))))
 
 (create
- (-> (table :users)
-     (integer :userID :unsigned :not-null)
-     (integer :orgID)
-     (set' :groups ["user" "admin"] (default "user"))
-     (enum :status ["active" "inactive"])
-     (decimal :ranking '(3 1) (default 0))
-     (varchar :username [50])
-     (chr :countryCode [2] (default "US"))
-     (primary-key :userID)
-     (index [:userID :orgID])
-     (unique :username)
-     (foreign-key :orgID '(orgs orgID) :on-delete-cascade))
- (engine :InnoDB)
- (collate :utf8-general-ci))
+  (-> (table :users)
+      (integer :userID :unsigned :not-null)
+      (integer :orgID)
+      (set' :groups ["user" "admin"] (default "user"))
+      (enum :status ["active" "inactive"])
+      (decimal :ranking '(3 1) (default 0))
+      (varchar :username [50])
+      (chr :countryCode [2] (default "US"))
+      (primary-key :userID)
+      (index [:userID :orgID])
+      (unique :username)
+      (foreign-key :orgID '(orgs orgID) :on-delete-cascade))
+  (engine :InnoDB)
+  (collate :utf8-general-ci))
 
 (alt
- (-> (table :users)
-     (add (varchar :email [50]) (after :userID))
-     (add (varchar :firstName [25]) :first)
-     (add (index [:firstName :lastName]))
-     (add (index '(username ranking)))
-     (add (foreign-key :orgID '(orgs orgID) :on-delete-cascade))
-     (change :username (varchar :username [100]))
-     (drop-default :ranking)
-     (set-default :ranking 1)
-     (drop-column :countryCode)
-     (drop-index :uname)
-     (drop-primary-key)
-     (drop-foreign-key :fk1)))
+  (-> (table :users)
+      (add (varchar :email [50]) (after :userID))
+      (add (varchar :firstName [25]) :first)
+      (add (index [:firstName :lastName]))
+      (add (index '(username ranking)))
+      (add (foreign-key :orgID '(orgs orgID) :on-delete-cascade))
+      (change :username (varchar :username [100]))
+      (drop-default :ranking)
+      (set-default :ranking 1)
+      (drop-column :countryCode)
+      (drop-index :uname)
+      (drop-primary-key)
+      (drop-foreign-key :fk1)))
 
 (alt (-> (table :system-users)
          (rename :users)))
 
 (def first-name (varchar :firstName [50]))
+
 (create
- (-> (table :users)
-     (append first-name)
-     (index first-name)))
+  (-> (table :users)
+      (append first-name)
+      (index first-name)))
 
 (defcolumns full-name
   (varchar :firstName [50])
   (varchar :lastName [50]))
 
 (create
- (-> (table :users)
-     (append full-name)
-     (index full-name)))
+  (-> (table :users)
+      (append full-name)
+      (index full-name)))
 
 (alt
- (-> (table :users)
-     (add first-name)))
+  (-> (table :users)
+      (add first-name)))
 
 (alt
- (-> (table :users)
-     (add full-name)))
-
-
-
-
+  (-> (table :users)
+      (add full-name)))
 

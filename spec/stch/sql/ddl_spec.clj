@@ -1,8 +1,10 @@
 (ns stch.sql.ddl-spec
-  (:require [stch.sql.ddl :refer :all]
-            [stch.schema :refer [with-fn-validation]]
-            [stch.util :refer [named?]])
-  (:use [speclj.core :exclude [after]]))
+  (:require
+   ;; exclude speclj.core/update
+   [speclj.core :refer [describe around context it should=]]
+   [stch.schema :refer [with-fn-validation]]
+   [stch.sql.ddl :refer :all]
+   [stch.util :refer [named?]]))
 
 (describe "create table"
   (around [it]
@@ -193,10 +195,10 @@
       (let [first-name (varchar :first_name [100])]
         (it "column record"
           (should= "CREATE TABLE users (first_name VARCHAR(100), INDEX(first_name))"
-                 (create
-                   (-> (table :users)
-                       (append first-name)
-                       (index first-name)))))))
+                   (create
+                     (-> (table :users)
+                         (append first-name)
+                         (index first-name)))))))
     (it "unique"
       (should= "CREATE TABLE users (user_id INT, UNIQUE(user_id))"
                (create
@@ -233,25 +235,25 @@
                (create
                  (-> (table :users)
                      (varchar :username [50]))
-                (engine :InnoDB))))
+                 (engine :InnoDB))))
     (it "collate"
       (should= "CREATE TABLE users (username VARCHAR(50)) COLLATE=utf8_general_ci"
                (create
                  (-> (table :users)
                      (varchar :username [50]))
-                (collate :utf8-general-ci))))
+                 (collate :utf8-general-ci))))
     (it "character-set"
       (should= "CREATE TABLE users (username VARCHAR(50)) CHARACTER SET=utf8"
                (create
                  (-> (table :users)
                      (varchar :username [50]))
-                (character-set :utf8))))
+                 (character-set :utf8))))
     (it "auto-inc"
       (should= "CREATE TABLE users (username VARCHAR(50)) AUTO_INCREMENT=1000"
                (create
                  (-> (table :users)
                      (varchar :username [50]))
-                (auto-inc 1000)))))
+                 (auto-inc 1000)))))
   (context "append"
     (let [cols (-> (columns)
                    (integer :user-id :unsigned :not-null)
@@ -329,10 +331,10 @@
                    (varchar :firstName [50])
                    (varchar :lastName [50]))]
       (it "columns"
-          (should= "ALTER TABLE users ADD COLUMN firstName VARCHAR(50), ADD COLUMN lastName VARCHAR(50)"
-                   (alt
-                    (-> (table :users)
-                        (add cols)))))))
+        (should= "ALTER TABLE users ADD COLUMN firstName VARCHAR(50), ADD COLUMN lastName VARCHAR(50)"
+                 (alt
+                   (-> (table :users)
+                       (add cols)))))))
   (context "add index"
     (it "index"
       (should= "ALTER TABLE users ADD INDEX(firstName)"
@@ -372,14 +374,14 @@
     (it "keyword"
       (should= "ALTER TABLE users ALTER COLUMN ranking DROP DEFAULT"
                (alt
-                (-> (table :users)
-                    (drop-default :ranking)))))
+                 (-> (table :users)
+                     (drop-default :ranking)))))
     (let [ranking (integer :ranking)]
       (it "column record"
         (should= "ALTER TABLE users ALTER COLUMN ranking DROP DEFAULT"
                  (alt
-                  (-> (table :users)
-                      (drop-default ranking)))))))
+                   (-> (table :users)
+                       (drop-default ranking)))))))
   (context "drop-column"
     (it "keyword"
       (should= "ALTER TABLE users DROP COLUMN username"
@@ -389,9 +391,9 @@
     (let [username (varchar :username [25])]
       (it "column record"
         (should= "ALTER TABLE users DROP COLUMN username"
-               (alt
-                 (-> (table :users)
-                     (drop-column username)))))))
+                 (alt
+                   (-> (table :users)
+                       (drop-column username)))))))
   (context "drop-index"
     (it "keyword"
       (should= "ALTER TABLE users DROP INDEX uname"
