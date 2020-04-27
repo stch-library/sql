@@ -1,7 +1,8 @@
 (ns stch.sql.ddl-spec
-  (:use [stch.sql.ddl]
-        [stch.schema :only [with-fn-validation]]
-        [speclj.core :exclude [after]]))
+  (:require [stch.sql.ddl :refer :all]
+            [stch.schema :refer [with-fn-validation]]
+            [stch.util :refer [named?]])
+  (:use [speclj.core :exclude [after]]))
 
 (describe "create table"
   (around [it]

@@ -2,10 +2,10 @@
   "SQL DSL for data definition language (DDL).
   Supports a majority of MySQL's statements for
   tables and databases."
-  (:require [clojure.string :as string])
-  (:use [stch.sql.util]
-        [stch.util :only [named?]]
-        [stch.schema]))
+  (:require [clojure.string :as string]
+            [stch.sql.util :refer :all]
+            [stch.schema :refer :all]
+            [stch.util :refer [named?]]))
 
 (def ^:private special-keywords
   {"auto-increment" "AUTO_INCREMENT"})

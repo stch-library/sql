@@ -1,8 +1,8 @@
 (ns stch.sql.format
   "Format query and DML statements. Use with stch.sql."
   (:require [stch.sql.types :refer [call raw param param-name]]
-            [clojure.string :as string])
-  (:use [stch.sql.util])
+            [clojure.string :as string]
+            [stch.sql.util :refer :all])
   (:import [stch.sql.types SqlCall SqlRaw SqlParam])
   (:refer-clojure :exclude [format]))
 
