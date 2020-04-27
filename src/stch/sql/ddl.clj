@@ -2,10 +2,11 @@
   "SQL DSL for data definition language (DDL).
   Supports a majority of MySQL's statements for
   tables and databases."
-  (:require [clojure.string :as string])
-  (:use [stch.sql.util]
-        [stch.util :only [named?]]
-        [stch.schema]))
+  (:require
+   [clojure.string :as string]
+   [stch.schema :refer :all]
+   [stch.sql.util :refer :all]
+   [stch.util :refer [named?]]))
 
 (def ^:private special-keywords
   {"auto-increment" "AUTO_INCREMENT"})
@@ -123,13 +124,13 @@
   (to-sql [_]
     (let [first-opt-seq? (sequential? (first options))]
       (space-join
-        (list* (parse-identifier col-name)
-               (if first-opt-seq?
-                 (str col-type (to-sql (first options)))
-                 col-type)
-               (if first-opt-seq?
-                 (map to-sql (rest options))
-                 (map to-sql options)))))))
+       (list* (parse-identifier col-name)
+              (if first-opt-seq?
+                (str col-type (to-sql (first options)))
+                col-type)
+              (if first-opt-seq?
+                (map to-sql (rest options))
+                (map to-sql options)))))))
 
 (def NamedOrColumn
   "Named or column spec type definition."
@@ -230,10 +231,10 @@
   (to-sql [_]
     (str index-type
          (paren-wrap
-           (if (sequential? index-cols)
-             (-> (map parse-name index-cols)
-                 comma-join)
-             (parse-name index-cols))))))
+          (if (sequential? index-cols)
+            (-> (map parse-name index-cols)
+                comma-join)
+            (parse-name index-cols))))))
 
 (defn' idx :- IndexSpec
   [index-type index-cols]
@@ -269,14 +270,14 @@
   ToSQL
   (to-sql [_]
     (space-join
-      (list* (str "FOREIGN KEY"
-                  (paren-wrap (parse-name field)))
-             "REFERENCES"
-             (str (parse-identifier (first references))
-                  (-> (second references)
-                      parse-identifier
-                      paren-wrap))
-             (map to-sql options)))))
+     (list* (str "FOREIGN KEY"
+                 (paren-wrap (parse-name field)))
+            "REFERENCES"
+            (str (parse-identifier (first references))
+                 (-> (second references)
+                     parse-identifier
+                     paren-wrap))
+            (map to-sql options)))))
 
 (defn foreign-key
   "Define a foreign key. Use with create or alt."
@@ -306,9 +307,9 @@
   ToSQL
   (to-sql [_]
     (space-join
-      (list "CONSTRAINT"
-            (parse-identifier key-name)
-            (to-sql key-spec)))))
+     (list "CONSTRAINT"
+           (parse-identifier key-name)
+           (to-sql key-spec)))))
 
 (defn constraint
   "Define a named constraint. Use with an index fn."
@@ -462,10 +463,10 @@
   ToSQL
   (to-sql [_]
     (space-join
-      (list "ALTER COLUMN"
-            (parse-name col)
-            "SET DEFAULT"
-            default))))
+     (list "ALTER COLUMN"
+           (parse-name col)
+           "SET DEFAULT"
+           default))))
 
 (defn' set-default :- TableSpec
   "Set column default. Use with alt."
@@ -481,9 +482,9 @@
   ToSQL
   (to-sql [_]
     (space-join
-      (list "ALTER COLUMN"
-            (parse-name col)
-            "DROP DEFAULT"))))
+     (list "ALTER COLUMN"
+           (parse-name col)
+           "DROP DEFAULT"))))
 
 (defn' drop-default :- TableSpec
   "Drop column default. Use with alt."

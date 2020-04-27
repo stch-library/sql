@@ -8,7 +8,7 @@
   :profiles
   {:1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
    :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
-   :1.10 {:dependencies [[org.clojure/clojure "1.10.1"]] }
+   :1.10 {:dependencies [[org.clojure/clojure "1.10.1"]]}
    :dev [:1.10
          {:dependencies [[speclj "3.0.2"]]}]}
   :plugins [[speclj "3.0.2"]

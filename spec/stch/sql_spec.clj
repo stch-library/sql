@@ -1,7 +1,9 @@
 (ns stch.sql-spec
-  (:require [stch.sql.format :as sql])
-  (:use stch.sql speclj.core )
-  (:refer-clojure :exclude [update]))
+  (:refer-clojure :exclude [update])
+  (:require
+   [speclj.core :refer :all]
+   [stch.sql :refer :all]
+   [stch.sql.format :as sql]))
 
 (describe "select"
   (context "select"
@@ -53,10 +55,10 @@
     (it "nested functions"
       (should= ["SELECT concat(if(gender = ?, ?, ?), lastName)" "M" "Mr." "Ms."]
                (-> (select
-                     '(concat
-                        (if (= gender "M")
-                          "Mr." "Ms.")
-                       lastName))
+                    '(concat
+                      (if (= gender "M")
+                        "Mr." "Ms.")
+                      lastName))
                    sql/format))))
   (context "from"
     (it "keyword"
@@ -226,14 +228,14 @@
                (-> (select :*)
                    (from :users)
                    (right-join :contacts
-                              '(= users.id contacts.id))
+                               '(= users.id contacts.id))
                    sql/format)))
     (it "multiple join"
       (should= ["SELECT * FROM users RIGHT JOIN contacts ON users.id = contacts.id RIGHT JOIN orgs ON users.orgid = orgs.orgid"]
                (-> (select :*)
                    (from :users)
                    (right-join :contacts '(= users.id contacts.id)
-                              :orgs '(= users.orgid orgs.orgid))
+                               :orgs '(= users.orgid orgs.orgid))
                    sql/format)))
     (it "right join x2"
       (should= ["SELECT * FROM users RIGHT JOIN contacts ON users.id = contacts.id RIGHT JOIN orgs ON users.orgid = orgs.orgid"]
@@ -364,13 +366,13 @@
   (it "vector of vectors"
     (should= ["INSERT INTO users VALUES (?, 35), (?, 37)" "Billy" "Joey"]
              (-> (insert-into :users)
-                 (values [["Billy" 35]["Joey" 37]])
+                 (values [["Billy" 35] ["Joey" 37]])
                  sql/format)))
   (it "modifiers"
     (should= ["INSERT IGNORE INTO users VALUES (?, 35), (?, 37)" "Billy" "Joey"]
              (-> (insert-into :users)
                  (modifiers :ignore)
-                 (values [["Billy" 35]["Joey" 37]])
+                 (values [["Billy" 35] ["Joey" 37]])
                  sql/format)))
   (it "insert select"
     (should= ["INSERT INTO foo (a, b, c) SELECT x.a, y.b, z.c FROM x INNER JOIN y ON x.id = y.id INNER JOIN z ON y.id = z.id"]
@@ -441,13 +443,13 @@
   (it "vector of vectors"
     (should= ["REPLACE INTO users VALUES (?, 35), (?, 37)" "Billy" "Joey"]
              (-> (replace-into :users)
-                 (values [["Billy" 35]["Joey" 37]])
+                 (values [["Billy" 35] ["Joey" 37]])
                  sql/format)))
   (it "modifiers"
     (should= ["REPLACE IGNORE INTO users VALUES (?, 35), (?, 37)" "Billy" "Joey"]
              (-> (replace-into :users)
                  (modifiers :ignore)
-                 (values [["Billy" 35]["Joey" 37]])
+                 (values [["Billy" 35] ["Joey" 37]])
                  sql/format))))
 
 (describe "quoting"
@@ -588,10 +590,10 @@
   (it "multiple selects"
     (should= ["(SELECT name, email FROM users) UNION (SELECT name, email FROM deleted_users)"]
              (sql/format
-               (union (-> (select :name :email)
-                          (from :users))
-                      (-> (select :name :email)
-                          (from :deleted-users)))))))
+              (union (-> (select :name :email)
+                         (from :users))
+                     (-> (select :name :email)
+                         (from :deleted-users)))))))
 
 (describe "complex"
   (it "nested in"
@@ -602,16 +604,4 @@
                              ~(-> (select '(in id [1 2]))
                                   (from :contacts))))
                  sql/format))))
-
-
-
-
-
-
-
-
-
-
-
-
 

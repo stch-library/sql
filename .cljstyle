@@ -1,0 +1,12 @@
+{:list-indent-size 1
+ :indents {defrecord [[:inner 0] [:inner 1]]
+           defrecord' [[:inner 0] [:inner 1]]
+           deftype [[:inner 0] [:inner 1]]
+           create [[:inner 0]]
+           alt [[:inner 0]]
+           #"(describe|context|it|around)" [[:inner 0]]}
+ :line-break-functions? false
+ :line-break-vars? false
+ :max-consecutive-blank-lines 1
+ :padding-lines 1
+ :reformat-types? false}

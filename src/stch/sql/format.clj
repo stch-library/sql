@@ -1,10 +1,15 @@
 (ns stch.sql.format
   "Format query and DML statements. Use with stch.sql."
-  (:require [stch.sql.types :refer [call raw param param-name]]
-            [clojure.string :as string])
-  (:use [stch.sql.util])
-  (:import [stch.sql.types SqlCall SqlRaw SqlParam])
-  (:refer-clojure :exclude [format]))
+  (:refer-clojure :exclude [format])
+  (:require
+   [clojure.string :as string]
+   [stch.sql.types :refer [call raw param param-name]]
+   [stch.sql.util :refer :all])
+  (:import
+   (stch.sql.types
+    SqlCall
+    SqlParam
+    SqlRaw)))
 
 (def ^:dynamic *clause*
   "During formatting, *clause* is bound to :select, :from, :where, etc."
@@ -45,9 +50,9 @@
       s
       (let [qf* #(if (= "*" %) % (qf %))]
         (if-not split
-         (qf* s)
-         (let [parts (string/split s #"\.")]
-           (string/join "." (map qf* parts))))))))
+          (qf* s)
+          (let [parts (string/split s #"\.")]
+            (string/join "." (map qf* parts))))))))
 
 (def infix-fns
   #{"+" "-" "*" "/" "%" "mod" "|" "&" "^"
@@ -93,17 +98,17 @@
   (if (seq more)
     (apply expand-binary-ops "=" a b more)
     (cond
-     (nil? a) (str (to-sql b) " IS NULL")
-     (nil? b) (str (to-sql a) " IS NULL")
-     :else (str (to-sql a) " = " (to-sql b)))))
+      (nil? a) (str (to-sql b) " IS NULL")
+      (nil? b) (str (to-sql a) " IS NULL")
+      :else (str (to-sql a) " = " (to-sql b)))))
 
 (defmethod fn-handler "<>" [_ a b & more]
   (if (seq more)
     (apply expand-binary-ops "<>" a b more)
     (cond
-     (nil? a) (str (to-sql b) " IS NOT NULL")
-     (nil? b) (str (to-sql a) " IS NOT NULL")
-     :else (str (to-sql a) " <> " (to-sql b)))))
+      (nil? a) (str (to-sql b) " IS NOT NULL")
+      (nil? b) (str (to-sql a) " IS NOT NULL")
+      :else (str (to-sql a) " <> " (to-sql b)))))
 
 (defmethod fn-handler "<" [_ a b & more]
   (if (seq more)
@@ -173,7 +178,7 @@
                           [sql-str param-values param-names]"
   [sql-map & params-or-opts]
   (let [opts (when (keyword? (first params-or-opts))
-                   (apply hash-map params-or-opts))
+               (apply hash-map params-or-opts))
         params (if (coll? (first params-or-opts))
                  (first params-or-opts)
                  (:params opts))]
@@ -304,8 +309,8 @@
         (str "NOT " (format-predicate* (first args)))
         (if (#{"and" "or" "xor"} op-name)
           (paren-wrap
-            (string/join (str " " (string/upper-case op-name) " ")
-                         (map format-predicate* args)))
+           (string/join (str " " (string/upper-case op-name) " ")
+                        (map format-predicate* args)))
           (to-sql (apply call pred)))))))
 
 (defn- format-modifiers [sql-map]
@@ -366,13 +371,13 @@
 (defmethod format-clause :order-by [[_ fields] _]
   (str "ORDER BY "
        (comma-join
-         (for [field fields]
-           (if (vector? field)
-             (let [[field order] field]
-               (str (to-sql field) " "
-                    (if (= "desc" (name order))
-                      "DESC" "ASC")))
-             (to-sql field))))))
+        (for [field fields]
+          (if (vector? field)
+            (let [[field order] field]
+              (str (to-sql field) " "
+                   (if (= "desc" (name order))
+                     "DESC" "ASC")))
+            (to-sql field))))))
 
 (defmethod format-clause :limit [[_ limit] _]
   (str "LIMIT " (to-sql limit)))
@@ -395,12 +400,12 @@
   (if (sequential? (first values))
     (str "VALUES "
          (comma-join
-           (for [x values]
-             (str "(" (comma-join (map to-sql x)) ")"))))
+          (for [x values]
+            (str "(" (comma-join (map to-sql x)) ")"))))
     (str
-      "(" (comma-join (map to-sql (keys (first values)))) ") VALUES "
-      (comma-join (for [x values]
-                    (str "(" (comma-join (map to-sql (vals x))) ")"))))))
+     "(" (comma-join (map to-sql (keys (first values)))) ") VALUES "
+     (comma-join (for [x values]
+                   (str "(" (comma-join (map to-sql (vals x))) ")"))))))
 
 (defmethod format-clause :query-values [[_ query-values] _]
   (to-sql query-values))
