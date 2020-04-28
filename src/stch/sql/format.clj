@@ -157,7 +157,7 @@
 (def clause-order
   "Determines the order that clauses will be placed within generated SQL"
   [:insert-into :replace-into :update :delete-from :using
-   :columns :set :union :select :from :join :left-join
+   :columns :set :union :union-all :select :from :join :left-join
    :right-join :where :group-by :having :order-by
    :limit :offset :values :query-values :on-dup-key])
 
@@ -333,6 +333,9 @@
 
 (defmethod format-clause :union [[_ select-stmts] _]
   (string/join " UNION " (map to-sql select-stmts)))
+
+(defmethod format-clause :union-all [[_ select-stmts] _]
+  (string/join " UNION ALL " (map to-sql select-stmts)))
 
 (defmethod format-clause :select [[_ fields] sql-map]
   (str "SELECT " (format-modifiers sql-map)
