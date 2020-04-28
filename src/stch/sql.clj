@@ -175,6 +175,10 @@
   [& select-stmts]
   {:union select-stmts})
 
+(defn union-all
+  [& select-stmts]
+  {:union-all select-stmts})
+
 (defmethod build-clause :insert-into [_ m table]
   (assoc m :insert-into table))
 
