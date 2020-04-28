@@ -595,6 +595,15 @@
                      (-> (select :name :email)
                          (from :deleted-users)))))))
 
+(describe "union-all"
+  (it "multiple selects"
+    (should= ["(SELECT name, email FROM users) UNION ALL (SELECT name, email FROM deleted_users)"]
+             (sql/format
+              (union-all (-> (select :name :email)
+                             (from :users))
+                         (-> (select :name :email)
+                             (from :deleted-users)))))))
+
 (describe "complex"
   (it "nested in"
     (should= ["SELECT * FROM users WHERE (id IN (SELECT (id IN (1, 2)) FROM contacts))"]
